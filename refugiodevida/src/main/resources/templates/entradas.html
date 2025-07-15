@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Refugio de Vida - Entradas Emocionales</title>
+    
+    <!-- Fuente y CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+
+    <!-- Mensaje motivacional dinámico -->
+    <div id="mensaje-motivacional" class="motivacional"></div>
+
+    <h1>🌸 Mis Entradas Emocionales 🌸</h1>
+
+    <!-- Formulario -->
+    <form th:action="@{/entradas/guardar}" th:object="${entradaNueva}" method="post" class="formulario">
+        <label>Emoción:</label>
+        <input type="text" th:field="*{emocion}" required />
+
+        <label>Descripción:</label>
+        <textarea th:field="*{descripcion}" required></textarea>
+
+        <button type="submit">Guardar Entrada</button>
+    </form>
+
+    <hr/>
+
+    <!-- Tabla de entradas -->
+    <h2>🌼 Listado de Entradas 🌼</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Emoción</th>
+                <th>Descripción</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="entrada : ${entradas}">
+                <td th:text="${entrada.id}">1</td>
+                <td th:text="${#temporals.format(entrada.fecha, 'dd-MM-yyyy HH:mm')}">17-06-2025 22:00</td>
+                <td th:text="${entrada.emocion}">Felicidad</td>
+                <td th:text="${entrada.descripcion}">Hoy fue un gran día...</td>
+                <td>
+                    <a th:href="@{/entradas/eliminar/{id}(id=${entrada.id})}" 
+                       onclick="return confirm('¿Estás seguro que quieres eliminar esta entrada?');">
+                       Eliminar
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Script para mensaje motivacional -->
+    <script>
+        const mensajeElement = document.getElementById("mensaje-motivacional");
+        const hora = new Date().getHours();
+        let mensaje = "";
+
+        if (hora < 6) {
+            mensaje = "Es de madrugada, todo lo que hagas ahora es valentía. 🌌";
+        } else if (hora < 12) {
+            mensaje = "Buenos días ☀️, hoy es un gran día para sanar y avanzar.";
+        } else if (hora < 18) {
+            mensaje = "¡Tarde brillante! Sigue construyendo tu paz. 🌿";
+        } else {
+            mensaje = "La noche trae reflexión. Cada entrada es un paso más. 🌙";
+        }
+
+        mensajeElement.textContent = mensaje;
+    </script>
+</body>
+</html>
